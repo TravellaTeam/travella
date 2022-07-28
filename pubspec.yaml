@@ -40,6 +40,7 @@ dependencies:
   url_launcher: ^6.1.5 #linkleri açmak için
   flutter_speed_dial: ^6.0.0 #FAB için
   curved_navigation_bar: ^1.0.3 #navigation bar
+  flutter_rating_bar: ^4.0.1 #kullanıcının oy vermesi
 
 
 dev_dependencies:
