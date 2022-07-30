@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:travella_01/pages/gecici_kesfet_sayfasi_widgeti.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:travella_01/pages/information_page/constants.dart';
 
-var mainColor = const Color.fromARGB(255, 0, 202, 157);
+
 
 class InformationPage extends StatefulWidget {
   const InformationPage({Key? key}) : super(key: key);
@@ -11,14 +12,32 @@ class InformationPage extends StatefulWidget {
 }
 
 class _InformationPageState extends State<InformationPage> {
+  var rateValue = 4.2;
+  String header = "Saklıkent Şelalesi";
 
-  List<Widget> rateValue = [
-    Icon(Icons.circle_rounded, color: mainColor,),
-    Icon(Icons.circle_rounded, color: mainColor,),
-    Icon(Icons.circle_rounded, color: mainColor,),
-    Icon(Icons.circle_rounded, color: mainColor,),
-    Icon(Icons.circle_outlined, color: mainColor,),
-  ];
+//---------------------------------Rating Bar-----------------------------------
+
+  RatingBar buildRatingBar() {
+
+    return RatingBar.builder(
+      glow: false,
+      initialRating: 4.2,
+      minRating: 4.2, //eğer bunlara initial rating değerini verirsem sabit bir rating bar elde ediyorum.
+      maxRating: 4.2,
+      direction: Axis.horizontal,
+      allowHalfRating: true,
+      itemCount: 5,
+      itemSize: 20,
+      itemPadding: EdgeInsets.symmetric(horizontal: 1.7),
+      itemBuilder: (context, _) => Icon(
+        Icons.star,
+        color: mainColor,
+      ),
+      onRatingUpdate: (rating) {},
+    );
+  }
+
+//--------------------------App Bar Actions Icons-------------------------------
 
   List<Widget> actions() {
     return [
@@ -26,20 +45,80 @@ class _InformationPageState extends State<InformationPage> {
         onPressed: () {
           print("tapped");
         },
-        icon: Icon(Icons.star_border),
+        icon: CircleAvatar(
+          backgroundColor: mainColor,
+          child: Icon( //CONST YAPARSAN HATA VERİR!
+            size: 28,
+            color: Colors.white,
+            Icons.star_border)),
       ),
       IconButton(
         onPressed: () {
           print("tapped");
         },
-        icon: Icon(Icons.alt_route),
+        icon: CircleAvatar(
+          backgroundColor: mainColor,
+          child: Icon( //CONST YAPARSAN HATA VERİR!
+            size: 28,
+            color: Colors.white,
+            Icons.alt_route),
+        ),
       ),
     ];
   }
 
+//------------------------Detailed Information Page-----------------------------
+
+  Widget makeDismissable({required Widget child}) => GestureDetector(
+    behavior: HitTestBehavior.opaque,
+    onTap:() => Navigator.of(context).pop(),
+    child: GestureDetector(onTap:() {}, child: child,),
+  );
+   Widget buildSheet() {
+    return makeDismissable(
+      child: DraggableScrollableSheet(
+        minChildSize: 0.5,
+        maxChildSize: 0.9,
+        initialChildSize: 0.7,
+        builder:(context, scrollController) => Container(
+          decoration: const BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.vertical(
+              top: Radius.circular(defaultBorderRadius),
+
+            ),
+          ),
+          padding: const EdgeInsets.fromLTRB(
+              defaultPadding, defaultPadding * 1.5, defaultPadding, defaultPadding),
+          child: ListView(
+            controller: scrollController,
+            children: [
+              Text(
+                  style: defaultTextStyle(),
+                  """Yığılca İlçesi Yağcılar Köyü'nde bulunan Saklıkent Şelalesi, Yedigöller yolu güzergahında, Düzce’ye 45 kilometre, ilçe merkezine ise 5 kilometre mesafededir. Düzce'nin keşfedilmesi gereken doğal güzelliklerinden olan şelale, ‘‘Yığılca Saklıkent Şelalesi Peyzaj Projesi’’ ile gerekli çevre düzenlemeleri yapılarak bölgenin piknik ve mesire alanı olarak hareketlenmesi sağlanmıştır.
+Yığılca İlçe Merkezi’nden Yağcılar Köyü’ne günün belirli saatlerinde toplu ulaşım araçları ile ulaşım sağlanmaktadır.
+Mükemmel doğa manzaralarıyla karşılaşacağınız şelaleye gitmeden önce tüm ihtiyaçlarınızı karşılamanızı öneririz çünkü şelalelerin bulunduğu bölgede ihtiyaçlarınızı karşılayacağınız işletme bulunmamaktadır.
+Şelalenin yer aldığı vadiye yaya olarak inmeniz ve yürümeniz gerekmekte. Zaman zaman dere içerisinden geçmek zorunluluğu olacağından kıyafet ve ayakkabı konusuna dikkat etmeniz gerekmektedir.
+"""),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(primary: mainColor),
+                    onPressed:() => Navigator.of(context).pop(),
+                    child: Text("Kapat")),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+//---------------------------Build Function-------------------------------------
   @override
   Widget build(BuildContext context) {
-    const header = "Saklıkent Şelalesi";
+
     return Scaffold(
         body: CustomScrollView(
           slivers: <Widget>[
@@ -55,17 +134,17 @@ class _InformationPageState extends State<InformationPage> {
                         decoration: const BoxDecoration(
                           color: Colors.white,
                           borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(20),
-                            topRight: Radius.circular(20),
+                            topLeft: Radius.circular(defaultBorderRadius),
+                            topRight: Radius.circular(defaultBorderRadius),
                           ),
                         ),
                         child: Row(
                           children: [
                             SizedBox(width: 11,),
-                            ...rateValue,
+                            buildRatingBar(),
                             SizedBox(width: 7,),
                             Text(
-                              "4.2/5.0",
+                              "${rateValue.toString()}/5.0",
                               style: TextStyle(fontSize: 17),
                             ),
                             SizedBox(width: 7,),
@@ -100,12 +179,58 @@ class _InformationPageState extends State<InformationPage> {
                       builder: (context) => AnaSayfaCenterWidget()));
                    */
                 },
-                icon: Icon(Icons.arrow_back),
+                icon: CircleAvatar(
+                  backgroundColor: mainColor,
+                  child: Icon(
+                    color: Colors.white,
+                    Icons.arrow_back)),
               ),
               actions: actions(),
             ),
+            SliverList(
+              delegate: SliverChildListDelegate(
+                [
+                  Container(
+                    padding: const EdgeInsets.fromLTRB(defaultPadding, defaultPadding * 1.5, defaultPadding, defaultPadding),
+                    child: Column(
+                      children: [
+                         Text(
+                          style: defaultTextStyle(),
+                          """Yığılca İlçesi Yağcılar Köyü'nde bulunan Saklıkent Şelalesi, Yedigöller yolu güzergahında, Düzce’ye 45 kilometre, ilçe merkezine ise 5 kilometre mesafededir. Düzce'nin keşfedilmesi gereken doğal güzelliklerinden olan şelale, ‘‘Yığılca Saklıkent Şelalesi Peyzaj Projesi’’ ile gerekli çevre düzenlemeleri yapılarak bölgenin piknik ve mesire alanı olarak hareketlenmesi sağlanmıştır."""),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            TextButton(
+                              child: Text(
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  color: mainColor,
+                                ),
+                                "Ayrıntılı Bilgi ➪"),
+                              onPressed:() => showModalBottomSheet(
+                                isScrollControlled: true,
+                                backgroundColor: Colors.transparent,
+                                context: context,
+                                builder: (context) => buildSheet(),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  )
+                ],
+              ),
+            ),
 
-            SliverGrid(
+          ],
+        )
+    );
+  }
+
+}
+/*
+SliverGrid(
               gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
                 maxCrossAxisExtent: 150.0,
                 mainAxisSpacing: 10.0,
@@ -135,8 +260,4 @@ class _InformationPageState extends State<InformationPage> {
                 },
               ),
             ),
-          ],
-        )
-    );
-  }
-}
+ */
