@@ -8,7 +8,7 @@ import 'package:travella_01/pages/information_page/information_page.dart';
 import 'pages/drawer_part.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
-
+//
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
