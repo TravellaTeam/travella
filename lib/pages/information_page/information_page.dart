@@ -115,93 +115,111 @@ Mükemmel doğa manzaralarıyla karşılaşacağınız şelaleye gitmeden önce 
       ),
     );
   }
+
+//-----------------------------asset Images-------------------------------------
+
+  final assetImages = [
+    "assets/images/saklikent_selalesi_1.jpg",
+    "assets/images/saklikent_selalesi_2.jpg",
+    "assets/images/saklikent-selalesi_3.jfif",
+  ];
+
 //---------------------------Build Function-------------------------------------
   @override
   Widget build(BuildContext context) {
 
     return Scaffold(
-        body: CustomScrollView(
-          slivers: <Widget>[
-            SliverAppBar(
-            //toolbarHeight: 45,
-              bottom: PreferredSize(
-                  preferredSize: Size.fromHeight(37),
-                  child: Column(
-                    children: [
-                      Container(
-                        width: double.maxFinite,
-                        padding: const EdgeInsets.only(top: 3, bottom: 2),
-                        decoration: const BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(defaultBorderRadius),
-                            topRight: Radius.circular(defaultBorderRadius),
-                          ),
-                        ),
-                        child: Row(
-                          children: [
-                            SizedBox(width: 11,),
-                            buildRatingBar(),
-                            SizedBox(width: 7,),
-                            Text(
-                              "${rateValue.toString()}/5.0",
-                              style: TextStyle(fontSize: 17),
-                            ),
-                            SizedBox(width: 7,),
-                            Text(
-                              "   ●   1.3 KM YAKININDA",
-                              style: TextStyle(color: Colors.grey.shade700),
-                            ),
-                          ],
-                        )
-                      ),
-                    ],
-                  )),
-              pinned: true,
-              expandedHeight: 300.0,
-              backgroundColor: mainColor,
-              flexibleSpace: FlexibleSpaceBar(
-                titlePadding: const EdgeInsets.only(bottom: 47, left: 55),
-                title: Text(
-                  header,
-                  style: TextStyle(fontSize: 23, color: Colors.grey.shade800),
-                ),
-                background: Image.asset(
-                  "assets/images/saklikent_selalesi_screenshot_2.png",
-                  width: double.maxFinite,
-                  fit: BoxFit.cover,
-                ),
-              ),
-              leading: IconButton(
-                onPressed: () async {
-                  /*
-                  await Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => AnaSayfaCenterWidget()));
-                   */
-                },
-                icon: CircleAvatar(
-                  backgroundColor: mainColor,
-                  child: Icon(
-                    color: Colors.white,
-                    Icons.arrow_back)),
-              ),
-              actions: actions(),
-            ),
-            SliverList(
-              delegate: SliverChildListDelegate(
-                [
-                  Container(
-                    padding: const EdgeInsets.fromLTRB(defaultPadding, defaultPadding * 1.5, defaultPadding, defaultPadding),
+        body: SafeArea(
+          child: CustomScrollView(
+            slivers: <Widget>[
+              SliverAppBar(
+              //toolbarHeight: 45,
+                bottom: PreferredSize(
+                    preferredSize: Size.fromHeight(37),
                     child: Column(
                       children: [
-                         Text(
-                          style: defaultTextStyle(),
-                          """Yığılca İlçesi Yağcılar Köyü'nde bulunan Saklıkent Şelalesi, Yedigöller yolu güzergahında, Düzce’ye 45 kilometre, ilçe merkezine ise 5 kilometre mesafededir. Düzce'nin keşfedilmesi gereken doğal güzelliklerinden olan şelale, ‘‘Yığılca Saklıkent Şelalesi Peyzaj Projesi’’ ile gerekli çevre düzenlemeleri yapılarak bölgenin piknik ve mesire alanı olarak hareketlenmesi sağlanmıştır."""),
+                        Container(
+                          width: double.maxFinite,
+                          padding: const EdgeInsets.only(top: 3, bottom: 2),
+                          decoration: const BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(defaultBorderRadius),
+                              topRight: Radius.circular(defaultBorderRadius),
+                            ),
+                          ),
+                          child: Row(
+                            children: [
+                              SizedBox(width: 11,),
+                              buildRatingBar(),
+                              SizedBox(width: 7,),
+                              Text(
+                                "${rateValue.toString()}/5.0",
+                                style: TextStyle(fontSize: 17),
+                              ),
+                              SizedBox(width: 7,),
+                              Text(
+                                "   ●   1.3 KM YAKININDA",
+                                style: TextStyle(color: Colors.grey.shade700),
+                              ),
+                            ],
+                          )
+                        ),
+                      ],
+                    )),
+                pinned: true,
+                expandedHeight: 270.0,
+                backgroundColor: mainColor,
+                flexibleSpace: FlexibleSpaceBar(
+                  titlePadding: const EdgeInsets.only(bottom: 43, left: 45),
+                  title: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 3),
+                    decoration: BoxDecoration(
+                      color: mainColor,
+                      borderRadius: BorderRadius.circular(10),
+                      ),
+                    child: Text(
+                      header,
+                      style: TextStyle(fontSize: 23, color: Colors.grey.shade800),
+                    ),
+                  ),
+                  background: Image.asset(
+                    assetImages.last,
+                    width: double.maxFinite,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+                leading: IconButton(
+                  onPressed: () async {
+                    /*
+                    await Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => AnaSayfaCenterWidget()));
+                     */
+                  },
+                  icon: const CircleAvatar(
+                    backgroundColor: mainColor,
+                    child: Icon(
+                      color: Colors.white,
+                      Icons.arrow_back)),
+                ),
+                actions: actions(),
+              ),
+              SliverList(
+                delegate: SliverChildListDelegate(
+                  [
+                    Column(
+                      children: [
+                         Container(
+                           padding: const EdgeInsets.fromLTRB(defaultPadding, defaultPadding * 1.5, defaultPadding, 0),
+                           child: Text(
+                            style: defaultTextStyle(),
+                            """Yığılca İlçesi Yağcılar Köyü'nde bulunan Saklıkent Şelalesi, Yedigöller yolu güzergahında, Düzce’ye 45 kilometre, ilçe merkezine ise 5 kilometre mesafededir. Düzce'nin keşfedilmesi gereken doğal güzelliklerinden olan şelale, ‘‘Yığılca Saklıkent Şelalesi Peyzaj Projesi’’ ile gerekli çevre düzenlemeleri yapılarak bölgenin piknik ve mesire alanı olarak hareketlenmesi sağlanmıştır."""),
+                         ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
                             TextButton(
-                              child: Text(
+                              child: Text( //const Verirsen Hata Alırsın
                                 style: TextStyle(
                                   fontSize: 16,
                                   color: mainColor,
@@ -216,14 +234,60 @@ Mükemmel doğa manzaralarıyla karşılaşacağınız şelaleye gitmeden önce 
                             ),
                           ],
                         ),
-                      ],
-                    ),
-                  )
-                ],
-              ),
-            ),
+                        Container(
+                          padding: EdgeInsets.only(left: 3, top: defaultPadding, right: 3, bottom: defaultPadding),
+                          child: Card(
+                            clipBehavior: Clip.antiAlias,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(defaultBorderRadius),
+                            ),
+                            child: Stack(
+                              children:[
+                                Container(
+                                  child: InkWell(
+                                    onTap:() {
 
-          ],
+                                    },
+                                    child: Ink.image(
+                                      height: 210,
+                                      width: double.maxFinite,
+                                      fit: BoxFit.cover,
+                                      image: AssetImage(
+                                        assetImages[1],
+                                      ),
+                                      child: Container(
+                                        alignment: Alignment.bottomLeft,
+                                        padding: const EdgeInsets.fromLTRB(defaultPadding, 0, 0, defaultPadding),
+                                        child: Container(
+                                        padding: const EdgeInsets.symmetric(horizontal: 5),
+                                        decoration: BoxDecoration(
+                                        color: mainColor,
+                                        borderRadius: BorderRadius.circular(defaultBorderRadius),
+                                        ),
+                                          child: Text(
+                                          "Fotoğraflar",
+                                            style: TextStyle(
+                                            fontWeight: FontWeight.w500,
+                                            fontSize: 25,
+                                            color: Colors.grey.shade800,
+                                            ),
+                                            ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                ),
+                              ]
+                            ),
+                          ),
+                        ),
+                      ],
+                    )
+                  ],
+                ),
+              ),
+            ],
+          ),
         )
     );
   }

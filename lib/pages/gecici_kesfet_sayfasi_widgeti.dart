@@ -11,15 +11,17 @@ class AnaSayfaCenterWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return  Center(
-      child: Column(
-        children: [
-          TextButton(
-              onPressed:() {
-            haritayaGit(context);
+      child: SafeArea(
+        child: Column(
+          children: [
+            TextButton(
+                onPressed:() {
+              haritayaGit(context);
 
-          }, child: Text("harita sayfası")),
-          Text("keşfet  sayfası"),
-        ],
+            }, child: Text("harita sayfası")),
+            Text("keşfet  sayfası"),
+          ],
+        ),
       ),
     );
   }
