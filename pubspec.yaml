@@ -40,7 +40,10 @@ dependencies:
   url_launcher: ^6.1.5 #linkleri açmak için
   flutter_speed_dial: ^6.0.0 #FAB için
   curved_navigation_bar: ^1.0.3 #navigation bar
-  firebase_core: ^1.20.0
+  firebase_core: ^1.20.0 #firebase bağlantısı
+  firebase_auth: ^3.6.1 #firebase doğrulama sistemi
+  google_sign_in: ^5.4.0 #google ile giriş
+
 
 
 dev_dependencies:

@@ -5,10 +5,12 @@ import 'package:travella_01/pages/gecici_kesfet_sayfasi_widgeti.dart';
 import 'package:travella_01/pages/ProfilKismi.dart';
 import 'package:travella_01/pages/appBar.dart'; //berat'ın yaptığı gölgeli app bar
 import 'package:travella_01/pages/information_page/information_page.dart';
+import 'package:travella_01/pages/loginPage.dart';
 import 'pages/drawer_part.dart';
-import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_core/firebase_core.dart'; //firebase için gerekli
 import 'firebase_options.dart';
-//
+import 'package:firebase_auth/firebase_auth.dart';
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
@@ -24,7 +26,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
       title: _title,
       home: AnaSayfa(),
     );
@@ -35,10 +37,10 @@ class AnaSayfa extends StatefulWidget {
   const AnaSayfa({Key? key}) : super(key: key);
 
   @override
-  State<AnaSayfa> createState() => _AnaSayfaState();
+  State<AnaSayfa> createState() => AnaSayfaState();
 }
 
-class _AnaSayfaState extends State<AnaSayfa> {
+class AnaSayfaState extends State<AnaSayfa> {
   int index = 0;
   int currentPage = 0;
 
@@ -48,15 +50,17 @@ class _AnaSayfaState extends State<AnaSayfa> {
     Whatif(),
   ];
 
-  var mainColor = const Color.fromARGB(255, 0, 202, 157);
+  var mainColor = Color.fromARGB(255, 0, 202, 157);
 
+  @override
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       extendBody: true,
       //appBar: AppBarLayout(), bu app bar'ı sayfalarda kendi alanlarınıza koyacaksınız
-      body: screens[index],
-      bottomNavigationBar: bottomNavBar(context),
+      //body: screens[index], bunu kapatmamın sebebi login pagei denememdi
+      body: LoginPage(),
+      //bottomNavigationBar: bottomNavBar(context), navigationBar her sayfaya ayrı eklenecek
       //AnaSayfaCenterWidget(),
       drawer: Drawer(
         child: DrawerIcerigi(),
@@ -96,6 +100,4 @@ class _AnaSayfaState extends State<AnaSayfa> {
       ),
     );
   }
-//yorum satırı
-
 }
