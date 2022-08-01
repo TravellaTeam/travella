@@ -1,6 +1,15 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:travella_01/pages/information_page/constants.dart';
+
+import 'contents/app_bar_background_image.dart';
+import 'contents/InformationText.dart';
+import 'contents/detailed_information_page.dart';
+import 'contents/get_location_in_google_maps.dart';
+import 'contents/information_pictures.dart';
+import 'contents/pictures_gallery.dart';
+import 'contents/rating_bar.dart';
 
 
 
@@ -15,28 +24,30 @@ class _InformationPageState extends State<InformationPage> {
   var rateValue = 4.2;
   String header = "Saklıkent Şelalesi";
 
-//---------------------------------Rating Bar-----------------------------------
+  late bool burayaGittimMi = false; // kullanıcıya göre kaydedilmesi sağlanmalı
 
-  RatingBar buildRatingBar() {
-
-    return RatingBar.builder(
-      glow: false,
-      initialRating: 4.2,
-      minRating: 4.2, //eğer bunlara initial rating değerini verirsem sabit bir rating bar elde ediyorum.
-      maxRating: 4.2,
-      direction: Axis.horizontal,
-      allowHalfRating: true,
-      itemCount: 5,
-      itemSize: 20,
-      itemPadding: EdgeInsets.symmetric(horizontal: 1.7),
-      itemBuilder: (context, _) => Icon(
-        Icons.star,
-        color: mainColor,
-      ),
-      onRatingUpdate: (rating) {},
-    );
+//---------------------------Chack In-------------------------------------------
+  Future<bool?> showToast() {
+    if(burayaGittimMi){
+      return Fluttertoast.showToast(
+        msg: "Gittiğim Yerler Listesine Eklendi.",
+        toastLength: Toast.LENGTH_SHORT, // length
+        gravity: ToastGravity.BOTTOM,    // location
+        fontSize: 18,
+        backgroundColor: Colors.grey.shade800,
+        textColor: Colors.white,
+      );
+    }else {
+      return Fluttertoast.showToast(
+        msg: "Gittiğim Yerler Listesinden Kaldırıldı.",
+        toastLength: Toast.LENGTH_LONG, // length
+        gravity: ToastGravity.BOTTOM,    // location
+        fontSize: 18,
+        backgroundColor: Colors.grey.shade800,
+        textColor: Colors.white,
+      );
+    }
   }
-
 //--------------------------App Bar Actions Icons-------------------------------
 
   List<Widget> actions() {
@@ -52,18 +63,7 @@ class _InformationPageState extends State<InformationPage> {
             color: Colors.white,
             Icons.star_border)),
       ),
-      IconButton(
-        onPressed: () {
-          print("tapped");
-        },
-        icon: CircleAvatar(
-          backgroundColor: mainColor,
-          child: Icon( //CONST YAPARSAN HATA VERİR!
-            size: 28,
-            color: Colors.white,
-            Icons.alt_route),
-        ),
-      ),
+      GetLocationInGoogleMaps(),
     ];
   }
 
@@ -93,20 +93,14 @@ class _InformationPageState extends State<InformationPage> {
           child: ListView(
             controller: scrollController,
             children: [
-              Text(
-                  style: defaultTextStyle(),
-                  """Yığılca İlçesi Yağcılar Köyü'nde bulunan Saklıkent Şelalesi, Yedigöller yolu güzergahında, Düzce’ye 45 kilometre, ilçe merkezine ise 5 kilometre mesafededir. Düzce'nin keşfedilmesi gereken doğal güzelliklerinden olan şelale, ‘‘Yığılca Saklıkent Şelalesi Peyzaj Projesi’’ ile gerekli çevre düzenlemeleri yapılarak bölgenin piknik ve mesire alanı olarak hareketlenmesi sağlanmıştır.
-Yığılca İlçe Merkezi’nden Yağcılar Köyü’ne günün belirli saatlerinde toplu ulaşım araçları ile ulaşım sağlanmaktadır.
-Mükemmel doğa manzaralarıyla karşılaşacağınız şelaleye gitmeden önce tüm ihtiyaçlarınızı karşılamanızı öneririz çünkü şelalelerin bulunduğu bölgede ihtiyaçlarınızı karşılayacağınız işletme bulunmamaktadır.
-Şelalenin yer aldığı vadiye yaya olarak inmeniz ve yürümeniz gerekmekte. Zaman zaman dere içerisinden geçmek zorunluluğu olacağından kıyafet ve ayakkabı konusuna dikkat etmeniz gerekmektedir.
-"""),
+              const DetailedInformationText(),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(primary: mainColor),
                     onPressed:() => Navigator.of(context).pop(),
-                    child: Text("Kapat")),
+                    child: const Text("Kapat")),
                 ],
               ),
             ],
@@ -116,13 +110,18 @@ Mükemmel doğa manzaralarıyla karşılaşacağınız şelaleye gitmeden önce 
     );
   }
 
-//-----------------------------asset Images-------------------------------------
 
-  final assetImages = [
-    "assets/images/saklikent_selalesi_1.jpg",
-    "assets/images/saklikent_selalesi_2.jpg",
-    "assets/images/saklikent-selalesi_3.jfif",
-  ];
+
+//-----------------------------Open Gallery-------------------------------------
+  void openGallery() {
+    Navigator.of(context).push(MaterialPageRoute(
+      builder:(context) => GalleryWidget(
+        assetImages: assetImages, //firebase eklendiğinde asset images parametresi yerine urlImages parametresi getirilebilir
+        index: 0,
+      ),
+      ),
+    );
+  }
 
 //---------------------------Build Function-------------------------------------
   @override
@@ -183,11 +182,7 @@ Mükemmel doğa manzaralarıyla karşılaşacağınız şelaleye gitmeden önce 
                       style: TextStyle(fontSize: 23, color: Colors.grey.shade800),
                     ),
                   ),
-                  background: Image.asset(
-                    assetImages.last,
-                    width: double.maxFinite,
-                    fit: BoxFit.cover,
-                  ),
+                  background: AppBarBackgroundImage(assetImages: assetImages), //bu parametrenin yerine firebase nin parametresi gelebilir
                 ),
                 leading: IconButton(
                   onPressed: () async {
@@ -209,12 +204,7 @@ Mükemmel doğa manzaralarıyla karşılaşacağınız şelaleye gitmeden önce 
                   [
                     Column(
                       children: [
-                         Container(
-                           padding: const EdgeInsets.fromLTRB(defaultPadding, defaultPadding * 1.5, defaultPadding, 0),
-                           child: Text(
-                            style: defaultTextStyle(),
-                            """Yığılca İlçesi Yağcılar Köyü'nde bulunan Saklıkent Şelalesi, Yedigöller yolu güzergahında, Düzce’ye 45 kilometre, ilçe merkezine ise 5 kilometre mesafededir. Düzce'nin keşfedilmesi gereken doğal güzelliklerinden olan şelale, ‘‘Yığılca Saklıkent Şelalesi Peyzaj Projesi’’ ile gerekli çevre düzenlemeleri yapılarak bölgenin piknik ve mesire alanı olarak hareketlenmesi sağlanmıştır."""),
-                         ),
+                         InformationText(),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
@@ -245,9 +235,7 @@ Mükemmel doğa manzaralarıyla karşılaşacağınız şelaleye gitmeden önce 
                               children:[
                                 Container(
                                   child: InkWell(
-                                    onTap:() {
-
-                                    },
+                                    onTap: openGallery,
                                     child: Ink.image(
                                       height: 210,
                                       width: double.maxFinite,
@@ -259,30 +247,90 @@ Mükemmel doğa manzaralarıyla karşılaşacağınız şelaleye gitmeden önce 
                                         alignment: Alignment.bottomLeft,
                                         padding: const EdgeInsets.fromLTRB(defaultPadding, 0, 0, defaultPadding),
                                         child: Container(
-                                        padding: const EdgeInsets.symmetric(horizontal: 5),
-                                        decoration: BoxDecoration(
-                                        color: mainColor,
-                                        borderRadius: BorderRadius.circular(defaultBorderRadius),
-                                        ),
+                                          padding: const EdgeInsets.symmetric(horizontal: 5),
+                                          decoration: BoxDecoration(
+                                          color: mainColor,
+                                          borderRadius: BorderRadius.circular(defaultBorderRadius),
+                                          ),
                                           child: Text(
-                                          "Fotoğraflar",
+                                            "${assetImages.length} Fotoğraf",
                                             style: TextStyle(
                                             fontWeight: FontWeight.w500,
                                             fontSize: 25,
                                             color: Colors.grey.shade800,
                                             ),
-                                            ),
+                                          ),
+                                        ),
                                       ),
                                     ),
                                   ),
-                                ),
                                 ),
                               ]
                             ),
                           ),
                         ),
+                        Container(
+                          padding: EdgeInsets.only(top: 5),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+
+                              ElevatedButton(
+                                onPressed:() {
+
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  primary: mainColor,
+                                  shape: StadiumBorder(),
+                                ),
+                                child:Text(
+                                  "Haritada Aç",
+                                  style: TextStyle(
+                                    fontSize: 23,
+                                    color: Colors.grey.shade800,
+                                  ),
+                                ),
+                              ),
+                              ElevatedButton.icon(
+                                icon: burayaGittimMi ?  Icon(
+                                  Icons.beenhere,
+                                  color: Colors.grey.shade800,
+                                ) :Icon(
+                                  Icons.square_outlined,
+                                  color: Colors.grey.shade800,
+                                ),
+                                onPressed:() async {
+                                  if(burayaGittimMi){
+                                    setState(() {
+                                      burayaGittimMi = false;
+                                    });
+                                    await showToast();
+                                  }else{
+                                    setState(() {
+                                      burayaGittimMi = true;
+                                    });
+                                    await showToast();
+                                  }
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  primary: mainColor,
+                                  shape: StadiumBorder(),
+                                ),
+                                label: Text(
+                                  "Buraya Gittim",
+                                  style: TextStyle(
+                                    fontSize: 23,
+                                    color: Colors.grey.shade800,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+
                       ],
-                    )
+                    ),
+                    SizedBox(height: 300,)
                   ],
                 ),
               ),
@@ -293,6 +341,12 @@ Mükemmel doğa manzaralarıyla karşılaşacağınız şelaleye gitmeden önce 
   }
 
 }
+
+
+
+
+
+
 /*
 SliverGrid(
               gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
