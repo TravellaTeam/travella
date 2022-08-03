@@ -8,17 +8,8 @@ class GetLocationInGoogleMaps extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return IconButton(
-      onPressed: () {
-        print("tapped");
-      },
-      icon: CircleAvatar(
-        backgroundColor: mainColor,
-        child: Icon( //CONST YAPARSAN HATA VERİR!
-            size: 28,
-            color: Colors.white,
-            Icons.alt_route),
-      ),
+    return Scaffold(
+        body: Center(child: Text("Haritada konum gösterilecek")),
     );
   }
 }

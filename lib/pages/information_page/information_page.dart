@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:travella_01/pages/information_page/constants.dart';
+import 'package:travella_01/pages/information_page/contents/reviews/reviewUI.dart';
 
 import 'contents/app_bar_background_image.dart';
 import 'contents/InformationText.dart';
@@ -24,10 +25,15 @@ class _InformationPageState extends State<InformationPage> {
   var rateValue = 4.2;
   String header = "Saklıkent Şelalesi";
 
-  late bool burayaGittimMi = false; // kullanıcıya göre kaydedilmesi sağlanmalı
+   bool burayaGittimMi = false; // kullanıcıya göre kaydedilmesi sağlanmalı
+
+  bool favoriNoktamMi = false; // kullanıcıya göre kaydedilmesi sağlanmalı
+
+  bool isMore = false;
+  bool isLiked = false; // kullanıcıya göre kaydedilmesi sağlanmalı
 
 //---------------------------Chack In-------------------------------------------
-  Future<bool?> showToast() {
+  Future<bool?> showToastBurayaGittim() {
     if(burayaGittimMi){
       return Fluttertoast.showToast(
         msg: "Gittiğim Yerler Listesine Eklendi.",
@@ -54,17 +60,56 @@ class _InformationPageState extends State<InformationPage> {
     return [
       IconButton(
         onPressed: () {
-          print("tapped");
+          if(favoriNoktamMi){
+            setState(() {
+              favoriNoktamMi = false;
+            });
+              showToastFavoriteSpots();
+          }else{
+            setState(() {
+              favoriNoktamMi = true;
+            });
+            showToastFavoriteSpots();
+          }
         },
-        icon: CircleAvatar(
-          backgroundColor: mainColor,
-          child: Icon( //CONST YAPARSAN HATA VERİR!
-            size: 28,
-            color: Colors.white,
-            Icons.star_border)),
+        icon: favoriNoktamMi ?
+          CircleAvatar(
+            backgroundColor: mainColor,
+            child: Icon( //CONST YAPARSAN HATA VERİR!
+                size: 28,
+                color: Colors.white,
+                Icons.star))
+        : CircleAvatar(
+            backgroundColor: mainColor,
+            child: Icon( //CONST YAPARSAN HATA VERİR!
+              size: 28,
+              color: Colors.white,
+              Icons.star_border)),
       ),
-      GetLocationInGoogleMaps(),
     ];
+  }
+
+//---------------------------Favorite Spots-------------------------------------
+  Future<bool?> showToastFavoriteSpots() {
+    if(favoriNoktamMi){
+      return Fluttertoast.showToast(
+        msg: "Favori Noktalarım Listesine Eklendi.",
+        toastLength: Toast.LENGTH_SHORT, // length
+        gravity: ToastGravity.BOTTOM,    // location
+        fontSize: 18,
+        backgroundColor: Colors.grey.shade800,
+        textColor: Colors.white,
+      );
+    }else {
+      return Fluttertoast.showToast(
+        msg: "Favori Noktalarım Listesinden Kaldırıldı.",
+        toastLength: Toast.LENGTH_LONG, // length
+        gravity: ToastGravity.BOTTOM,    // location
+        fontSize: 18,
+        backgroundColor: Colors.grey.shade800,
+        textColor: Colors.white,
+      );
+    }
   }
 
 //------------------------Detailed Information Page-----------------------------
@@ -113,6 +158,7 @@ class _InformationPageState extends State<InformationPage> {
 
 
 //-----------------------------Open Gallery-------------------------------------
+
   void openGallery() {
     Navigator.of(context).push(MaterialPageRoute(
       builder:(context) => GalleryWidget(
@@ -120,6 +166,22 @@ class _InformationPageState extends State<InformationPage> {
         index: 0,
       ),
       ),
+    );
+  }
+
+//---------------------------Review Builder-------------------------------------
+
+  Widget? _dynamicReviewBuilder(BuildContext context, int index) {
+    return ReviewUI(
+      image: "assets/images/melih_emre_guler.jpeg",
+      name: "Username",
+      date: "02 Ağu 2022",
+      comment:
+      "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Viverra adipiscing at in tellus integer feugiat scelerisque varius morbi. Enim nec dui nunc mattis enim."
+          "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Viverra adipiscing at in tellus integer feugiat scelerisque varius morbi. Enim nec dui nunc mattis enim.",
+      rating: 4,
+      isLess: isMore,
+      isFavorite: isLiked,
     );
   }
 
@@ -270,14 +332,14 @@ class _InformationPageState extends State<InformationPage> {
                           ),
                         ),
                         Container(
-                          padding: EdgeInsets.only(top: 5),
+                          padding: EdgeInsets.only(top: 5, bottom: defaultPadding*2),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
 
                               ElevatedButton(
                                 onPressed:() {
-
+                                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => GetLocationInGoogleMaps(),));
                                 },
                                 style: ElevatedButton.styleFrom(
                                   primary: mainColor,
@@ -292,7 +354,7 @@ class _InformationPageState extends State<InformationPage> {
                                 ),
                               ),
                               ElevatedButton.icon(
-                                icon: burayaGittimMi ?  Icon(
+                                icon: burayaGittimMi ? Icon(
                                   Icons.beenhere,
                                   color: Colors.grey.shade800,
                                 ) :Icon(
@@ -304,12 +366,12 @@ class _InformationPageState extends State<InformationPage> {
                                     setState(() {
                                       burayaGittimMi = false;
                                     });
-                                    await showToast();
+                                    await showToastBurayaGittim();
                                   }else{
                                     setState(() {
                                       burayaGittimMi = true;
                                     });
-                                    await showToast();
+                                    await showToastBurayaGittim();
                                   }
                                 },
                                 style: ElevatedButton.styleFrom(
@@ -327,11 +389,34 @@ class _InformationPageState extends State<InformationPage> {
                             ],
                           ),
                         ),
-
+                        Container(
+                          alignment: Alignment.centerLeft,
+                          padding: EdgeInsets.only(left: defaultPadding, bottom: defaultPadding/2),
+                          child: Row(
+                            children: [
+                              Text("5 ",
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 30,
+                                ),
+                              ),
+                              Text("Yorum",
+                                style: TextStyle(
+                                  fontSize: 20
+                                ),
+                              ),
+                            ],
+                          )
+                        ),
                       ],
                     ),
-                    SizedBox(height: 300,)
                   ],
+                ),
+              ),
+              SliverList(
+                delegate: SliverChildBuilderDelegate(
+                  _dynamicReviewBuilder,
+                  childCount: 5,
                 ),
               ),
             ],
@@ -339,7 +424,6 @@ class _InformationPageState extends State<InformationPage> {
         )
     );
   }
-
 }
 
 
